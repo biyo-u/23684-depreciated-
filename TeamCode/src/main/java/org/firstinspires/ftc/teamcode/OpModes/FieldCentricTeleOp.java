@@ -18,6 +18,7 @@ public class FieldCentricTeleOp extends OpMode {
     DcMotor slide_left;
     DcMotor slide_right;
     IMU imu;
+    double power;
 
     @Override
     public void init() {
@@ -41,8 +42,8 @@ public class FieldCentricTeleOp extends OpMode {
         imu = hardwareMap.get(IMU.class, "imu");
         // Adjust the orientation parameters to match your robot
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
-                RevHubOrientationOnRobot.UsbFacingDirection.DOWN));
+                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                RevHubOrientationOnRobot.UsbFacingDirection.UP));
         // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
         imu.initialize(parameters);
     }
@@ -58,6 +59,12 @@ public class FieldCentricTeleOp extends OpMode {
             imu.resetYaw();
         }
 
+        if (gamepad1.right_bumper) {
+            power = 1;
+        } else {
+            power = 2.5;
+        }
+
         double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
         // Rotate the movement direction counter to the bot's rotation
@@ -70,10 +77,10 @@ public class FieldCentricTeleOp extends OpMode {
         // This ensures all the powers maintain the same ratio,
         // but only if at least one is out of the range [-1, 1]
         double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
-        double frontLeftPower = (rotY + rotX + rx) / denominator;
-        double backLeftPower = (rotY - rotX + rx) / denominator;
-        double frontRightPower = (rotY - rotX - rx) / denominator;
-        double backRightPower = (rotY + rotX - rx) / denominator;
+        double frontLeftPower = ((rotY + rotX + rx) / denominator) / power;
+        double backLeftPower = ((rotY - rotX + rx) / denominator) / power;
+        double frontRightPower = ((rotY - rotX - rx) / denominator) / power;
+        double backRightPower = ((rotY + rotX - rx) / denominator) / power;
 
         front_left.setPower(frontLeftPower);
         rear_left.setPower(backLeftPower);
