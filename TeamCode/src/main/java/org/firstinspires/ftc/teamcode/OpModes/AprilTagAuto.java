@@ -29,22 +29,25 @@
 
 package org.firstinspires.ftc.teamcode.OpModes;
 
-import android.os.Build;
 import android.util.Size;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.*;
+import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
+
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 
 /*
  * This OpMode illustrates the basics of AprilTag recognition and pose estimation,
@@ -85,10 +88,16 @@ public class AprilTagAuto extends LinearOpMode {
      */
     private VisionPortal visionPortal;
 
+    Robot robot;
+
     @Override
     public void runOpMode() {
 
+        robot = new Robot(hardwareMap, telemetry);
+        telemetry = robot.telemetry;
+
         initAprilTag();
+
 
         // Wait for the DS start button to be touched.
         telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
@@ -126,6 +135,7 @@ public class AprilTagAuto extends LinearOpMode {
      */
     private void initAprilTag() {
 
+        Constants.addAprilTags();
         // Create the AprilTag processor.
         aprilTag = new AprilTagProcessor.Builder()
 
@@ -201,6 +211,39 @@ public class AprilTagAuto extends LinearOpMode {
         // Step through the list of detections and display info for each one.
         for (AprilTagDetection detection : currentDetections) {
             if (detection.metadata != null) {
+                Vector2d detectedAprilTagLocation = Constants.aprilTagLocations.get(detection.id);
+                Pose2d distanceToAprilTag = new Pose2d(detection.ftcPose.range/ sin(detection.ftcPose.bearing), (detection.ftcPose.range / cos(detection.ftcPose.bearing)), 0);
+//                Pose2d postionRobotToAprilTag =
+
+                // FTC Sample Code
+
+                if (detection.rawPose != null)   {
+//                    detection.ftcPose = new AprilTagPoseFtc();
+
+                    double heading = robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+
+                    double robotX = detection.rawPose.x + Constants.Camera.x * Math.cos(heading);
+                    double robotZ = detection.rawPose.z + Constants.Camera.z;
+                    double robotY = -detection.rawPose.y + Constants.Camera.y * Math.sin(heading);
+
+//                    detection.
+
+                    telemetry.addLine("April Tag Robot X: " + robotX);
+                    telemetry.addLine("April Tag Robot Y: " + robotY);
+                    telemetry.addLine("April Tag Robot Z: " + robotZ);
+
+//                    Orientation rot = Orientation.getOrientation(detection.rawPose.R, AxesReference.INTRINSIC, AxesOrder.YXZ, outputUnitsAngle);
+//                    detection.ftcPose.yaw = -rot.firstAngle;
+//                    detection.ftcPose.roll = rot.thirdAngle;
+//                    detection.ftcPose.pitch = rot.secondAngle;
+//                    detection.ftcPose.range = Math.hypot(detection.ftcPose.x, detection.ftcPose.y);
+//                    detection.ftcPose.bearing = outputUnitsAngle.fromUnit(AngleUnit.RADIANS, Math.atan2(-detection.ftcPose.x, detection.ftcPose.y));
+//                    detection.ftcPose.elevation = outputUnitsAngle.fromUnit(AngleUnit.RADIANS, Math.atan2(detection.ftcPose.z, detection.ftcPose.y));
+
+//                    Pose3D robotPositionFromAprilTag = new Pose3D(new Position(), new YawPitchRollAngles());
+                }
+
+                telemetry.addLine(String.format("XY %6.1f %6.1f (inch)", detectedAprilTagLocation.x, detectedAprilTagLocation.y));
                 telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
                 telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
                 telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
