@@ -36,7 +36,14 @@ public class FieldCentricTeleOp extends OpMode {
         // If your robot moves backwards when commanded to go forwards,
         // reverse the left side instead.
         // See the note about this earlier on this page.
-        rear_right.setDirection(DcMotorSimple.Direction.REVERSE);
+        front_left.setDirection(DcMotorSimple.Direction.REVERSE);
+        front_right.setDirection(DcMotorSimple.Direction.REVERSE);
+        rear_left.setDirection(DcMotorSimple.Direction.REVERSE);
+        rear_right.setDirection(DcMotorSimple.Direction.FORWARD);
+        slide_right.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        slide_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slide_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Retrieve the IMU from the hardware map
         imu = hardwareMap.get(IMU.class, "imu");
@@ -62,7 +69,23 @@ public class FieldCentricTeleOp extends OpMode {
         if (gamepad1.right_bumper) {
             power = 1;
         } else {
-            power = 2.5;
+            power = 1.5;
+        }
+
+        if(gamepad1.dpad_up){
+            slide_left.setPower(1);
+            slide_right.setPower(1);
+        } else {
+            slide_left.setPower(0);
+            slide_right.setPower(0);
+        }
+
+        if(gamepad1.dpad_down){
+            slide_left.setPower(-1);
+            slide_right.setPower(-1);
+        } else {
+            slide_left.setPower(0);
+            slide_right.setPower(0);
         }
 
         double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
