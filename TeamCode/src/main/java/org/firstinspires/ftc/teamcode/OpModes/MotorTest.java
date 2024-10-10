@@ -8,79 +8,58 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.Robot;
 
-@TeleOp(name = "Motor Test", group = "Tele Op")
+@TeleOp(name = "Motor Test", group = "Test")
 public class MotorTest extends OpMode {
-    DcMotor front_left;
-    DcMotor rear_left;
-    DcMotor front_right;
-    DcMotor rear_right;
-    DcMotor slide_left;
-    DcMotor slide_right;
-    IMU imu;
-    double power;
+
+    Robot robot;
 
     @Override
     public void init() {
-        // Declare our motors
-        // Make sure your ID's match your configuration
-        front_left = hardwareMap.get(DcMotor.class, "front_left");
-        rear_left = hardwareMap.get(DcMotor.class, "rear_left");
-        front_right = hardwareMap.get(DcMotor.class, "front_right");
-        rear_right = hardwareMap.get(DcMotor.class, "rear_right");
-        slide_left = hardwareMap.get(DcMotor.class, "slide_left");
-        slide_right = hardwareMap.get(DcMotor.class, "slide_right");
-
-
-        // Reverse the right side motors. This may be wrong for your setup.
-        // If your robot moves backwards when commanded to go forwards,
-        // reverse the left side instead.
-        // See the note about this earlier on this page.
-        front_left.setDirection(DcMotorSimple.Direction.REVERSE);
-        front_right.setDirection(DcMotorSimple.Direction.REVERSE);
-        rear_left.setDirection(DcMotorSimple.Direction.REVERSE);
-        rear_right.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        // Retrieve the IMU from the hardware map
-        imu = hardwareMap.get(IMU.class, "imu");
-        // Adjust the orientation parameters to match your robot
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
-                RevHubOrientationOnRobot.UsbFacingDirection.UP));
-        // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
-        imu.initialize(parameters);
+        // Initializes the motor with the hardwareMap (for all hardware devices) and telemetry (for CAI Telemetry)
+        robot = new Robot(hardwareMap, telemetry);
     }
+
     public void loop(){
-        if(gamepad1.x){
-            front_left.setPower(1);
-        } else {
-            front_left.setPower(0);
-        }
 
-        if(gamepad1.y){
-            front_right.setPower(1);
-        } else {
-            front_right.setPower(0);
-        }
+        // All keys move motors at normal max speed (100%)
+        // Note that motors can go faster than normal max speed, but is bad for the motors
+        // X Key moves Front Left motor
+        // Y Key moves Front Right motor
+        // A Key moves Rear Left motor
+        // B Key moves Rear Right motor
+        // D Pad Up moves Slide up
+        // D Pad Down moves Slide up
 
-        if(gamepad1.a){
-            rear_left.setPower(1);
-        } else {
-            rear_left.setPower(0);
-        }
+        robot.telemetry.addData("Motor Speed Note", "All motors will move at 100% speed, which is not" +
+                                                                "the max. Motors can move more than 100%, but that" +
+                                                                "damages the motors.");
+        robot.telemetry.addData("X Key", "Front Left Motor");
+        robot.telemetry.addData("Y Key", "Front Right Motor");
+        robot.telemetry.addData("A Key", "Rear Left Motor");
+        robot.telemetry.addData("B Key", "Rear Right Motor");
+        robot.telemetry.addData("D Pad Up", "Both Slide Motors Up");
+        robot.telemetry.addData("D Pad Down", "Both Slide Motors Down");
 
-        if(gamepad1.b){
-            rear_right.setPower(1);
-        } else {
-            rear_right.setPower(0);
-        }
+        double frontLeftSpeed = gamepad1.x ? 1 : 0;
+        double frontRightSpeed = gamepad1.y ? 1 : 0;
+        double rearLeftSpeed = gamepad1.a ? 1 : 0;
+        double rearRightSpeed = gamepad1.b ? 1 : 0;
+
+        robot.drive.setFrontLeftSpeed(frontLeftSpeed);
+        robot.drive.setFrontRightSpeed(frontRightSpeed);
+        robot.drive.setRearLeftSpeed(rearLeftSpeed);
+        robot.drive.setRearRightSpeed(rearRightSpeed);
 
         if(gamepad1.dpad_up){
-            slide_left.setPower(1);
-            slide_right.setPower(1);
+            robot.slide.SlideUp(1);
+        } else if(gamepad1.dpad_down){
+            robot.slide.SlideDown(1);
         } else {
-            slide_left.setPower(0);
-            slide_right.setPower(0);
+            robot.slide.SlideStop();
         }
+
+
     }
 }
