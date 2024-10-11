@@ -95,4 +95,7 @@ public class Robot {
     public void updateSpeed(double newPower) {
         power = newPower;
     }
+            odo.setPosition(new Pose2D(DistanceUnit.INCH, (odoX * (1 - Constants.aprilTagTrust)) + (x * Constants.aprilTagTrust), (odoY * (1 - Constants.aprilTagTrust)) + (y * Constants.aprilTagTrust), AngleUnit.DEGREES, imu.getRobotYawPitchRollAngles().getYaw()));
+        }
+    }
 }

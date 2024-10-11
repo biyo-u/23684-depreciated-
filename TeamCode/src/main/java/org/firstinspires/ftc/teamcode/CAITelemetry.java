@@ -222,6 +222,7 @@ public class CAITelemetry implements Telemetry {
     @Override
     public boolean removeItem(Item item) {
         boolean bReturn = false;
+
         if (dashboardEnabled) {
             bReturn = dashboardTelemetry.removeItem(item);
         }
