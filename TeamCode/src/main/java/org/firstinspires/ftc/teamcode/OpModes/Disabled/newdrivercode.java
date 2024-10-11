@@ -1,4 +1,5 @@
-package org.firstinspires.ftc.teamcode.OpModes;
+package org.firstinspires.ftc.teamcode.OpModes.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -6,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /* A new drivebase code based on Game Manual 0's implementation of holonomic driving. this is to compare with DRIVER PRACTICE A to bugtest the code and fix strafing */
 
 @TeleOp(name = "DRIVER PRACTICE A", group = "TECH TITANS 2025")
+@Disabled
 public class newdrivercode extends OpMode {
 
     private DcMotor right_front;

@@ -1,4 +1,5 @@
-package org.firstinspires.ftc.teamcode.OpModes;
+package org.firstinspires.ftc.teamcode.OpModes.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -7,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 // based on DRIVER PRACTICE A
 
 @TeleOp(name = "Benjamin Drivetrain V0.5.0", group = "TECH TITANS 2025")
+@Disabled
 public class benjamindrive extends OpMode {
 
     private DcMotor front_right;

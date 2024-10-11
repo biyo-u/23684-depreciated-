@@ -140,7 +140,7 @@ public class GoBildaPinpointDriver extends I2cDeviceSynchDevice<I2cDeviceSynchSi
     //enum that captures the direction the encoders are set to
     public enum EncoderDirection{
         FORWARD,
-        REVERSED;
+        REVERSED
     }
 
     //enum that captures the kind of goBILDA odometry pods, if goBILDA pods are used
@@ -298,7 +298,7 @@ public class GoBildaPinpointDriver extends I2cDeviceSynchDevice<I2cDeviceSynchSi
      * <strong> Robot MUST be stationary </strong> <br><br>
      * Device takes a large number of samples, and uses those as the gyroscope zero-offset. This takes approximately 0.25 seconds.
      */
-    public void recalibrateIMU(){writeInt(Register.DEVICE_CONTROL,1<<0);}
+    public void recalibrateIMU(){writeInt(Register.DEVICE_CONTROL, 1);}
 
     /**
      * Resets the current position to 0,0,0 and recalibrates the Odometry Computer's internal IMU. <br><br>
