@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-public class Drive implements IDrive {
+public class Drive {
     public DcMotor front_left;
     public DcMotor rear_left;
     public DcMotor front_right;
@@ -19,5 +19,18 @@ public class Drive implements IDrive {
         this.front_right.setDirection(DcMotorSimple.Direction.REVERSE);
         this.rear_left.setDirection(DcMotorSimple.Direction.REVERSE);
         this.rear_right.setDirection(DcMotorSimple.Direction.FORWARD);
+    }
+
+    public void setFrontLeftSpeed(double speed){
+        front_left.setPower(speed);
+    }
+    public void setFrontRightSpeed(double speed){
+        front_right.setPower(speed);
+    }
+    public void setRearLeftSpeed(double speed){
+        rear_left.setPower(speed);
+    }
+    public void setRearRightSpeed(double speed){
+        rear_right.setPower(speed);
     }
 }

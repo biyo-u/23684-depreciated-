@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -11,20 +10,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive;
-import org.firstinspires.ftc.teamcode.Subsystems.IDrive;
-import org.firstinspires.ftc.teamcode.Subsystems.ISlide;
 import org.firstinspires.ftc.teamcode.Subsystems.Slide;
 
 public class Robot {
-    // Setup All Variables
-    // All 4 motors
-    private DcMotor front_left;
-    private DcMotor rear_left;
-    private DcMotor front_right;
-    private DcMotor rear_right;
-    // Both slide motors, to move the slide up and down
-    private DcMotor slide_left;
-    private DcMotor slide_right;
     // Webcam for AprilTags
     public WebcamName webcam;
     // Library from GoBilda for their odometry computer
@@ -39,9 +27,9 @@ public class Robot {
     // Requires an AprilTag to be in view when robot starts
     boolean isOdometryInitialized = false;
 
-    public ISlide slide;
+    public Slide slide;
 
-    public IDrive drive;
+    public Drive drive;
 
     // TODO: Only initialize required hardware depending on use case
     public Robot(HardwareMap hardwareMap, Telemetry ftcTelemetry) {
@@ -49,12 +37,14 @@ public class Robot {
         telemetry = new CAITelemetry(ftcTelemetry);
         // Gets the GoBuilda odometry computer
         odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");
-        front_left = hardwareMap.get(DcMotor.class, "front_left");
-        rear_left = hardwareMap.get(DcMotor.class, "rear_left");
-        front_right = hardwareMap.get(DcMotor.class, "front_right");
-        rear_right = hardwareMap.get(DcMotor.class, "rear_right");
-        slide_left = hardwareMap.get(DcMotor.class, "slide_left");
-        slide_right = hardwareMap.get(DcMotor.class, "slide_right");
+        // All 4 motors
+        DcMotor front_left = hardwareMap.get(DcMotor.class, "front_left");
+        DcMotor rear_left = hardwareMap.get(DcMotor.class, "rear_left");
+        DcMotor front_right = hardwareMap.get(DcMotor.class, "front_right");
+        DcMotor rear_right = hardwareMap.get(DcMotor.class, "rear_right");
+        // Both slide motors, to move the slide up and down
+        DcMotor slide_left = hardwareMap.get(DcMotor.class, "slide_left");
+        DcMotor slide_right = hardwareMap.get(DcMotor.class, "slide_right");
         webcam = hardwareMap.get(WebcamName.class, "Webcam");
 
         this.slide = new Slide(slide_left, slide_right);
