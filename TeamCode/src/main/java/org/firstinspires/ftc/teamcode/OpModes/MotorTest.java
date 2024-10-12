@@ -12,7 +12,7 @@ public class MotorTest extends OpMode {
     @Override
     public void init() {
         // Initializes the motor with the hardwareMap (for all hardware devices) and telemetry (for CAI Telemetry)
-        robot = new Robot(hardwareMap, telemetry);
+        robot = new Robot(hardwareMap, telemetry, false);
     }
 
     public void loop(){

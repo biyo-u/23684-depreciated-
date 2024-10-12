@@ -11,7 +11,7 @@ public class FieldCentricTeleOp extends OpMode {
 
     @Override
     public void init() {
-        robot = new Robot(hardwareMap, telemetry);
+        robot = new Robot(hardwareMap, telemetry, false);
     }
 
     public void loop(){
@@ -39,6 +39,12 @@ public class FieldCentricTeleOp extends OpMode {
             robot.slide.SlideDown(1);
         } else {
             robot.slide.SlideStop();
+        }
+
+        if(gamepad1.dpad_left){
+            robot.firstHang.HangUp();
+        } else if(gamepad1.dpad_right){
+            robot.firstHang.HangDown();
         }
 
 

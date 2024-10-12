@@ -21,6 +21,8 @@ public class Drive {
         this.rear_right.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
+    // TODO: Add other common functions
+
     public void setFrontLeftSpeed(double speed){
         front_left.setPower(speed);
     }

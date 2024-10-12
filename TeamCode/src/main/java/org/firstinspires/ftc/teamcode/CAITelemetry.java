@@ -9,8 +9,8 @@ public class CAITelemetry implements Telemetry {
     Telemetry dashboardTelemetry;
     Telemetry ftcTelemetry;
     FtcDashboard dashboard;
-    private boolean dashboardEnabled = Constants.DASHBOARD_ENABLED;
-    private boolean telemetryEnabled = Constants.TELEMETRY_ENABLED;
+    private boolean dashboardEnabled = Constants.developerMode;
+    private boolean telemetryEnabled = Constants.developerMode;
 
     public CAITelemetry(Telemetry ftcTelemetry) {
         dashboard = FtcDashboard.getInstance();

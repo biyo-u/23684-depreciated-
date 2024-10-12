@@ -4,39 +4,48 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive;
+import org.firstinspires.ftc.teamcode.Subsystems.FirstHang;
+import org.firstinspires.ftc.teamcode.Subsystems.Odometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Slide;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 public class Robot {
     // Webcam for AprilTags
     public WebcamName webcam;
-    // Library from GoBilda for their odometry computer
-    public GoBildaPinpointDriver odo;
     // IMU is for direction, it is part of the control hub
     public IMU imu;
     // Power is for speed (percentage between 0 and 1)
     public double power;
     // Telemetry will be overridden with CAI's Telemetry, which sends telemetry to both the driver hub and FTC Dashboard
     public Telemetry telemetry;
-    // Odometry will be initialized when AprilTags provide a reading
-    // Requires an AprilTag to be in view when robot starts
-    boolean isOdometryInitialized = false;
 
     public Slide slide;
 
     public Drive drive;
 
-    // TODO: Only initialize required hardware depending on use case
-    public Robot(HardwareMap hardwareMap, Telemetry ftcTelemetry) {
+    public VisionPortal.Builder builder;
+
+    public AprilTagProcessor aprilTag;
+
+    public Odometry odometry;
+
+    public FirstHang firstHang;
+
+    // TODO: Only initialize required hardware depending on use case (IN PROGRESS)
+    public Robot(HardwareMap hardwareMap, Telemetry ftcTelemetry, boolean setupAprilTags) {
         // Uses CAI Telemetry to integrate with FTC Dashboard
         telemetry = new CAITelemetry(ftcTelemetry);
         // Gets the GoBuilda odometry computer
-        odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");
+        GoBildaPinpointDriver odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");
         // All 4 motors
         DcMotor front_left = hardwareMap.get(DcMotor.class, "front_left");
         DcMotor rear_left = hardwareMap.get(DcMotor.class, "rear_left");
@@ -45,11 +54,38 @@ public class Robot {
         // Both slide motors, to move the slide up and down
         DcMotor slide_left = hardwareMap.get(DcMotor.class, "slide_left");
         DcMotor slide_right = hardwareMap.get(DcMotor.class, "slide_right");
-        webcam = hardwareMap.get(WebcamName.class, "Webcam");
+
+        Servo hang_left = hardwareMap.get(Servo.class, "first_hang_left");
+        Servo hang_right = hardwareMap.get(Servo.class, "first_hang_right");
+
+        if (setupAprilTags){
+            webcam = hardwareMap.get(WebcamName.class, "Webcam");
+            aprilTag = new AprilTagProcessor.Builder()
+                    .setDrawAxes(Constants.developerMode)
+                    .setDrawCubeProjection(Constants.developerMode)
+                    .setDrawTagOutline(Constants.developerMode)
+                    .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
+                    .setTagLibrary(AprilTagGameDatabase.getIntoTheDeepTagLibrary())
+                    .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
+                    .setLensIntrinsics(Constants.Camera.fx, Constants.Camera.fy, Constants.Camera.cx, Constants.Camera.cy)
+                    .build();
+
+            // TODO: Learn about April Tag decimation
+            // Adjust Image Decimation to trade-off detection-range for detection-rate.
+            // eg: Some typical detection data using a Logitech C920 WebCam
+            // Decimation = 1 :  Detect 2" Tag from 10 feet away at 10 Frames per second
+            // Decimation = 2 :  Detect 2" Tag from 6  feet away at 22 Frames per second
+            // Decimation = 3 :  Detect 2" Tag from 4  feet away at 30 Frames Per Second (default)
+            // Decimation = 3 :  Detect 5" Tag from 10 feet away at 30 Frames Per Second (default)
+            // Note: Decimation can be changed on-the-fly to adapt during a match.
+            aprilTag.setDecimation(3);
+        }
 
         this.slide = new Slide(slide_left, slide_right);
 
         this.drive = new Drive(front_left, front_right, rear_left, rear_right);
+
+        this.firstHang = new FirstHang(hang_left, hang_right);
 
         // Sets slide zero power mode to break so slide doesn't fall by itself
         // TODO: Add custom braking with higher power
@@ -65,37 +101,15 @@ public class Robot {
         // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
         imu.initialize(parameters);
 
-        // Sets Odometry offsets
-        // TODO: Tune odometry offsets with our final robot
-        odo.setOffsets(-84.0, -168.0);
-        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
-        odo.resetPosAndIMU();
+        odometry = new Odometry(odo, imu);
 
         telemetry.clearAll();
     }
 
     // TODO: Call updateOdometry from AprilTag Code
-    public void updateOdometry(double x, double y){
-        if (!isOdometryInitialized){
-            // If there is no starting odometry position, set it using april tags and IMU
-            odo.setPosition(new Pose2D(DistanceUnit.INCH, x, y, AngleUnit.DEGREES, imu.getRobotYawPitchRollAngles().getYaw()));
-            // then set it to initialize so it is not overridden, but set using a weight instead
-            isOdometryInitialized = true;
-        } else {
-            // TODO: Find out how accurate april tags are
-            double odoX = odo.getPosX();
-            double odoY = odo.getPosY();
 
-            // Sets odometry position with a weight value (Constants.aprilTagTrust is between 0 and 1)
-            odo.setPosition(new Pose2D(DistanceUnit.INCH, (odoX * (1 - Constants.aprilTagTrust)) + (x * Constants.aprilTagTrust), (odoY * (1 - Constants.aprilTagTrust)) + (y * Constants.aprilTagTrust), AngleUnit.DEGREES, imu.getRobotYawPitchRollAngles().getYaw()));
-        }
-    }
 
     public void updateSpeed(double newPower) {
         power = newPower;
-    }
-            odo.setPosition(new Pose2D(DistanceUnit.INCH, (odoX * (1 - Constants.aprilTagTrust)) + (x * Constants.aprilTagTrust), (odoY * (1 - Constants.aprilTagTrust)) + (y * Constants.aprilTagTrust), AngleUnit.DEGREES, imu.getRobotYawPitchRollAngles().getYaw()));
-        }
     }
 }

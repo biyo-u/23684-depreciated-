@@ -7,10 +7,8 @@ import java.util.*;
 
 @Config
 public class Constants {
-    public static Map<Integer, Vector2d> aprilTagLocations = new HashMap<Integer, Vector2d>();
-    // TODO: Disable dashboard for comps
-    public static boolean DASHBOARD_ENABLED = true;
-    public static boolean TELEMETRY_ENABLED = true;
+    // TODO: Disable developerMode for comps
+    public static boolean developerMode = true;
     public static double aprilTagTrust = 0.25;
     public static double slideLeftExtra = 0;
     public static double slideRightExtra = 0;
@@ -26,6 +24,7 @@ public class Constants {
     }
 
     // TODO: Measure camera position relative to center of robot
+    // TODO: Add code to cover for rotations
     public static class Camera {
         public static double x = 0;
         public static double y = 0;
@@ -33,6 +32,12 @@ public class Constants {
         public static double yaw = 0;
         public static double pitch = 0;
         public static double roll = 0;
+        public static int width = 1920;
+        public static int height = 1200;
+        public static double fx = 1475.214322;
+        public static double fy = 1488.200027;
+        public static double cx = 916.2279188;
+        public static double cy = 657.417681;
     }
 
 }
