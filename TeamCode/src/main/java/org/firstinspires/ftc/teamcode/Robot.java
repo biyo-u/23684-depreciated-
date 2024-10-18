@@ -41,7 +41,7 @@ public class Robot {
     public FirstHang firstHang;
 
     // TODO: Only initialize required hardware depending on use case (IN PROGRESS)
-    public Robot(HardwareMap hardwareMap, Telemetry ftcTelemetry, boolean setupAprilTags) {
+    public Robot(HardwareMap hardwareMap, Telemetry ftcTelemetry, boolean setupAprilTags, boolean setupHang) {
         // Uses CAI Telemetry to integrate with FTC Dashboard
         telemetry = new CAITelemetry(ftcTelemetry);
         // Gets the GoBuilda odometry computer
@@ -85,7 +85,9 @@ public class Robot {
 
         this.drive = new Drive(front_left, front_right, rear_left, rear_right);
 
-        this.firstHang = new FirstHang(hang_left, hang_right);
+        if (setupHang){
+            this.firstHang = new FirstHang(hang_left, hang_right);
+        }
 
         // Sets slide zero power mode to break so slide doesn't fall by itself
         // TODO: Add custom braking with higher power

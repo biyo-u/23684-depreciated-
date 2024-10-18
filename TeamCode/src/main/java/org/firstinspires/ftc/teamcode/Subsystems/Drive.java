@@ -23,6 +23,7 @@ public class Drive {
 
     // TODO: Add other common functions
 
+
     public void setFrontLeftSpeed(double speed){
         front_left.setPower(speed);
     }
@@ -34,5 +35,11 @@ public class Drive {
     }
     public void setRearRightSpeed(double speed){
         rear_right.setPower(speed);
+    }
+    public void setMotorSpeeds(double front_left_speed, double front_right_speed, double rear_left_speed, double rear_right_speed){
+        setFrontLeftSpeed(front_left_speed);
+        setFrontRightSpeed(front_right_speed);
+        setRearLeftSpeed(rear_left_speed);
+        setRearRightSpeed(rear_right_speed);
     }
 }
