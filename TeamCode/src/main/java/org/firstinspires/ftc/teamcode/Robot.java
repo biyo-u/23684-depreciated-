@@ -43,7 +43,7 @@ public class Robot {
     // TODO: Only initialize required hardware depending on use case (IN PROGRESS)
     public Robot(HardwareMap hardwareMap, Telemetry ftcTelemetry, boolean setupAprilTags, boolean setupHang) {
         // Uses CAI Telemetry to integrate with FTC Dashboard
-        telemetry = new CAITelemetry(ftcTelemetry);
+        this.telemetry = new CAITelemetry(ftcTelemetry);
         // Gets the GoBuilda odometry computer
         GoBildaPinpointDriver odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");
         // All 4 motors
@@ -105,7 +105,7 @@ public class Robot {
 
         odometry = new Odometry(odo, imu);
 
-        telemetry.clearAll();
+        this.telemetry.clearAll();
     }
 
     // TODO: Call updateOdometry from AprilTag Code
