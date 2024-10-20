@@ -36,8 +36,8 @@ public class Slide {
         slide_right.setTargetPosition(slide_right.getCurrentPosition());
         slide_left.setPower(Constants.slideBrakeSpeed);
         slide_right.setPower(Constants.slideBrakeSpeed);
-        slide_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slide_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slide_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slide_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 }
 
