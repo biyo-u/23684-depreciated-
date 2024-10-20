@@ -26,12 +26,12 @@ public class AprilTagAuto extends OpMode {
 
     Robot robot;
 
-    Telemetry telemetry;
+//    Telemetry telemetry;
 
     @Override
     public void init() {
         robot = new Robot(hardwareMap, telemetry, true);
-        telemetry = robot.telemetry;
+//        telemetry = robot.telemetry;
         initAprilTag();
 
         telemetry.addData("DS preview on/off", "3 dots, Camera Stream");

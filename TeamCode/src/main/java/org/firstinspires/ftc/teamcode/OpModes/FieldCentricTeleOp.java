@@ -33,19 +33,29 @@ public class FieldCentricTeleOp extends OpMode {
 
         // Moves slide up when dpad up is pressed and down when dpad down is pressed
         // TODO: Fix slide up speed problem
-        if(gamepad1.dpad_up){
-            robot.slide.SlideUp(1);
-        } else if(gamepad1.dpad_down){
-            robot.slide.SlideDown(1);
+        if(gamepad2.left_stick_y > 0.1){
+            robot.slide.SlideDown(0.5);
+        } else if(gamepad2.left_stick_y < -0.1){
+            robot.slide.SlideUp(0.5);
         } else {
             robot.slide.SlideStop();
         }
 
-        if(gamepad1.dpad_left){
+        if(gamepad2.x){
+            robot.liftServo.Move(0);
+        } else if(gamepad2.y){
+            robot.liftServo.Move(0.3);
+        } else if(gamepad2.b){
+            robot.liftServo.Move(1);
+        }
+
+        if(gamepad2.dpad_left){
             robot.firstHang.HangUp();
-        } else if(gamepad1.dpad_right){
+        } else if(gamepad2.dpad_right){
             robot.firstHang.HangDown();
         }
+
+        telemetry.addData("Slide Servo Position", robot.liftServo.getPosition());
 
 
         // Gets robot heading (direction it's pointing)

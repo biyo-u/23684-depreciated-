@@ -10,10 +10,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
-import org.firstinspires.ftc.teamcode.Subsystems.Drive;
-import org.firstinspires.ftc.teamcode.Subsystems.FirstHang;
-import org.firstinspires.ftc.teamcode.Subsystems.Odometry;
-import org.firstinspires.ftc.teamcode.Subsystems.Slide;
+import org.firstinspires.ftc.teamcode.Subsystems.*;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -40,10 +37,14 @@ public class Robot {
 
     public FirstHang firstHang;
 
+    public LiftServo liftServo;
+
     // TODO: Only initialize required hardware depending on use case (IN PROGRESS)
     public Robot(HardwareMap hardwareMap, Telemetry ftcTelemetry, boolean setupAprilTags) {
         // Uses CAI Telemetry to integrate with FTC Dashboard
-        telemetry = new CAITelemetry(ftcTelemetry);
+//        telemetry = new CAITelemetry(ftcTelemetry);
+        // TODO: Fix CAI Telemetry
+        telemetry = ftcTelemetry;
         // Gets the GoBuilda odometry computer
         GoBildaPinpointDriver odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");
         // All 4 motors
@@ -57,6 +58,8 @@ public class Robot {
 
         Servo hang_left = hardwareMap.get(Servo.class, "first_hang_left");
         Servo hang_right = hardwareMap.get(Servo.class, "first_hang_right");
+
+        Servo lift_servo = hardwareMap.get(Servo.class, "lift_servo");
 
         if (setupAprilTags){
             webcam = hardwareMap.get(WebcamName.class, "Webcam");
@@ -87,6 +90,8 @@ public class Robot {
 
         this.firstHang = new FirstHang(hang_left, hang_right);
 
+        this.liftServo = new LiftServo(lift_servo);
+
         // Sets slide zero power mode to break so slide doesn't fall by itself
         // TODO: Add custom braking with higher power
         slide_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -103,7 +108,7 @@ public class Robot {
 
         odometry = new Odometry(odo, imu);
 
-        telemetry.clearAll();
+//        telemetry.clearAll();
     }
 
     // TODO: Call updateOdometry from AprilTag Code
