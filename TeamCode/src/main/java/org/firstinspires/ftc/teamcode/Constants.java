@@ -26,9 +26,9 @@ public class Constants {
     // TODO: Measure camera position relative to center of robot
     // TODO: Add code to cover for rotations
     public static class Camera {
-        public static double x = 0;
-        public static double y = 0;
-        public static double z = 0;
+        public static double offsetX = 0;
+        public static double offsetY = 0;
+        public static double offsetZ = 0;
         public static double yaw = 0;
         public static double pitch = 0;
         public static double roll = 0;
