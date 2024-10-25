@@ -11,7 +11,7 @@ public class slidetesttemp extends OpMode {
     private DcMotor slide_left;
     private DcMotor slide_right;
 
-    double reduction = 3;
+    double reduction = 2;
 
     @Override
     public void init() {
@@ -22,17 +22,17 @@ public class slidetesttemp extends OpMode {
     @Override
     public void loop() {
         if (gamepad1.dpad_up) {
-            slide_left.setPower(-1);
-        } else if (gamepad1.dpad_down) {
             slide_left.setPower(1);
+        } else if (gamepad1.dpad_down) {
+            slide_left.setPower(-1);
         } else {
             slide_left.setPower(0);
         }
 
         if (gamepad1.dpad_left) {
-            slide_right.setPower(-1/reduction);
-        } else if (gamepad1.dpad_right) {
             slide_right.setPower(1/reduction);
+        } else if (gamepad1.dpad_right) {
+            slide_right.setPower(-1/reduction);
         } else {
             slide_right.setPower(0);
         }
