@@ -16,7 +16,6 @@ public class Constants {
     public static boolean cameraStreaming = false;
     public static double drivetrainEncoderResolution = 332.8; //measured in ticks
     public static Map<Integer, Vector2d> aprilTagLocations = new HashMap<Integer, Vector2d>();
-    public static double drivetrainEncoderResolution = 332.8; //measured in ticks
 
     public static void addAprilTags(){
         aprilTagLocations.put(11, new Vector2d(12, 12));
