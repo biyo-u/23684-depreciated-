@@ -13,6 +13,7 @@ public class Constants {
     public static double slideLeftExtra = 0;
     public static double slideRightExtra = 0;
     public static Map<Integer, Vector2d> aprilTagLocations = new HashMap<Integer, Vector2d>();
+    public static double drivetrainMotorResolution = 332.8;
 
     public static void addAprilTags(){
         aprilTagLocations.put(11, new Vector2d(12, 12));
