@@ -61,7 +61,7 @@ public class AprilTagAuto extends OpMode {
         // Choose a camera resolution. Not all cameras support all resolutions.
         builder.setCameraResolution(new Size(Constants.Camera.width, Constants.Camera.height));
 
-        builder.enableLiveView(Constants.developerMode);
+        builder.enableLiveView(Constants.cameraStreaming);
         // Set the stream format; MJPEG uses less bandwidth than default YUY2.
         builder.setStreamFormat(VisionPortal.StreamFormat.YUY2);
 

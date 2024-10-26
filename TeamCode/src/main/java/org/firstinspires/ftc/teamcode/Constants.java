@@ -13,6 +13,7 @@ public class Constants {
     public static double slideLeftExtra = 0;
     public static double slideRightExtra = 0;
     public static double slideBrakeSpeed = 0.1;
+    public static boolean cameraStreaming = false;
     public static Map<Integer, Vector2d> aprilTagLocations = new HashMap<Integer, Vector2d>();
 
     public static void addAprilTags(){
