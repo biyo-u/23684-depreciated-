@@ -1,12 +1,10 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
-import android.annotation.SuppressLint;
 import android.util.Size;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+
 import org.firstinspires.ftc.robotcore.external.navigation.*;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Robot;
@@ -63,7 +61,7 @@ public class AprilTagAuto extends OpMode {
         // Choose a camera resolution. Not all cameras support all resolutions.
         builder.setCameraResolution(new Size(Constants.Camera.width, Constants.Camera.height));
 
-        builder.enableLiveView(Constants.developerMode);
+        builder.enableLiveView(Constants.cameraStreaming);
         // Set the stream format; MJPEG uses less bandwidth than default YUY2.
         builder.setStreamFormat(VisionPortal.StreamFormat.YUY2);
 
@@ -90,23 +88,28 @@ public class AprilTagAuto extends OpMode {
         // Step through the list of detections and display info for each one.
         for (AprilTagDetection detection : currentDetections) {
             if (detection.metadata != null) {
-                Vector2d detectedAprilTagLocation = Constants.aprilTagLocations.get(detection.id);
-
                 if (detection.rawPose != null)   {
                     double heading = robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
 
-                    double robotX = detection.rawPose.x + Constants.Camera.x * Math.cos(heading);
-                    double robotZ = detection.rawPose.z + Constants.Camera.z;
-                    double robotY = -detection.rawPose.y + Constants.Camera.y * Math.sin(heading);
+                    double robotX = detection.rawPose.x + Constants.Camera.offsetX * Math.cos(heading);
+                    double robotZ = detection.rawPose.z + Constants.Camera.offsetZ;
+                    double robotY = -detection.rawPose.y + Constants.Camera.offsetY * Math.sin(heading);
+                    Vector2d aprilTagPosition = Constants.aprilTagLocations.get(detection.id);
 
-                    telemetry.addLine("April Tag Robot X: " + robotX);
-                    telemetry.addLine("April Tag Robot Y: " + robotY);
-                    telemetry.addLine("April Tag Robot Z: " + robotZ);
+                    telemetry.addLine("Distance Relative From April Tag");
+                    telemetry.addLine("X: " + robotY);
+                    telemetry.addLine("Y: " + robotY);
+                    telemetry.addLine("Z: " + robotZ);
+                    telemetry.addLine("April Tag Position On Field");
+                    telemetry.addLine("X: " + aprilTagPosition.x);
+                    telemetry.addLine("Y: " + aprilTagPosition.y);
+                    telemetry.addLine("Robot Position On Field");
+                    telemetry.addLine("X: " + robotX + aprilTagPosition.x + Constants.Camera.offsetX);
+                    telemetry.addLine("Y: " + robotY + aprilTagPosition.y + Constants.Camera.offsetY);
 
                     robot.odometry.updateOdometry(robotX, robotY);
                 }
 
-                telemetry.addLine(String.format("XY %6.1f %6.1f (inch)", detectedAprilTagLocation.x, detectedAprilTagLocation.y));
                 telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
                 telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
                 telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));

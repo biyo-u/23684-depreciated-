@@ -32,7 +32,12 @@ public class Slide {
     }
 
     public void SlideStop(){
-        SlideMove(0, 0, 0);
+        slide_left.setTargetPosition(slide_left.getCurrentPosition());
+        slide_right.setTargetPosition(slide_right.getCurrentPosition());
+        slide_left.setPower(Constants.slideBrakeSpeed);
+        slide_right.setPower(Constants.slideBrakeSpeed);
+        slide_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slide_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 }
 

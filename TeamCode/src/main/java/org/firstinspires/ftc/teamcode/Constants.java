@@ -12,6 +12,9 @@ public class Constants {
     public static double aprilTagTrust = 0.25;
     public static double slideLeftExtra = 0;
     public static double slideRightExtra = 0;
+    public static double slideBrakeSpeed = 0.1;
+    public static boolean cameraStreaming = false;
+    public static double drivetrainEncoderResolution = 332.8; //measured in ticks
     public static Map<Integer, Vector2d> aprilTagLocations = new HashMap<Integer, Vector2d>();
     public static double drivetrainEncoderResolution = 332.8; //measured in ticks
 
@@ -27,9 +30,9 @@ public class Constants {
     // TODO: Measure camera position relative to center of robot
     // TODO: Add code to cover for rotations
     public static class Camera {
-        public static double x = 0;
-        public static double y = 0;
-        public static double z = 0;
+        public static double offsetX = 0;
+        public static double offsetY = 0;
+        public static double offsetZ = 0;
         public static double yaw = 0;
         public static double pitch = 0;
         public static double roll = 0;

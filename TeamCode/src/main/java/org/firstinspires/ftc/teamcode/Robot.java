@@ -93,7 +93,6 @@ public class Robot {
         this.liftServo = new LiftServo(lift_servo);
 
         // Sets slide zero power mode to break so slide doesn't fall by itself
-        // TODO: Add custom braking with higher power
         slide_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slide_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
